@@ -1,0 +1,16 @@
+#! /bin/tcsh
+
+set RIG="FTd3000"
+#set RIG="IC9700"
+
+#set CONNECTION="DIRECT"
+set CONNECTION="FLRIG"
+
+pattern.py -rig DIRECT FTdx3000 -rotor NONE
+
+#start_flrig $RIG
+#pattern.py -rig FLRIG FTdx3000 -rotor NONE
+
+#start_flrig $RIG
+#rotor
+#pattern.py -rig $CONNECTION $RIG -rotor HAMLIB -port2 4533 
