@@ -1,8 +1,8 @@
-# pattern
+# Pattern
 
-Scripts to measure and plot patterns of a VHF/UHF antenna using:
-- a Nano VNA as a signal
+Scripts to measure and plot beam pattern of a VHF/UHF antenna using:
+- a Nano VNA as a signal source
 - a receiver to measure SNR
 - a rotor to turn the antenna
       
-![Screen Shot]( Docs/pyRig.png)
+![Screen Shot]( Docs/pattern.png)
