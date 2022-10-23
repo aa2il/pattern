@@ -1,16 +1,25 @@
 #! /bin/tcsh
 
 set RIG="FTd3000"
-#set RIG="IC9700"
+set RIG="IC9700"
 
 #set CONNECTION="DIRECT"
 set CONNECTION="FLRIG"
 
-pattern.py -rig DIRECT FTdx3000 -rotor NONE
+set STEP=5
+set TOL=2.5
+
+
+pkill flrig
+pkill rotctld
+start_flrig $RIG
+/home/pi/hamlib-4.3.1/tests/rotctld -vvv -m 603 -r /dev/ttyACM0 -s 9600 &
+
+#pattern.py -rig DIRECT FTdx3000 -rotor NONE
 
 #start_flrig $RIG
 #pattern.py -rig FLRIG FTdx3000 -rotor NONE
 
 #start_flrig $RIG
 #rotor
-#pattern.py -rig $CONNECTION $RIG -rotor HAMLIB -port2 4533 
+pattern.py -rig $CONNECTION $RIG -rotor HAMLIB -port2 4533 -step $STEP -tol $TOL

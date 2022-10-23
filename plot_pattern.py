@@ -13,10 +13,7 @@ import argparse
 
 ###############################################################################
 
-#fname='PATTERN1.DAT'
-#fname='PATTERN2.DAT'
-#fname='PATTERN3.DAT'
-#fname='PATTERN4.DAT'
+RMIN=-30
 
 ###############################################################################
 
@@ -76,39 +73,34 @@ print('az=',az[0:3])
 db = get_values(data,'db',float)
 print('db=',db[0:3])
 db=db-max(db)
+print(db)
 
+for i in range(len(db)):
+    db[i]=max(db[i],RMIN)
+
+# Fit a parabola to peak to determine where max is and how much we need to rotate plot by
+n2=6
+idx=np.argmax(db)
+print('idx=',idx)
+idx2=range( (idx-n2),(idx+n2) )
+print('idx2=',idx2)
+x=az[idx2]
+p=np.polyfit(x,db[idx2],2)
+print('p=',p)
+y=p[0]*x*x + p[1]*x + p[2]
+az0=-0.5*p[1]/p[0]
+print('az0=',az0)
+    
 ###############################################################################
 
+fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
+
+theta=(az-az0)*np.pi/180.
+ax.plot(theta, db,color='red')
+
 fig, ax = plt.subplots()
+ax.plot(az,db,color='red')
+ax.plot(x,y,color='green')
+ax.grid(True)
 
-rads=az*np.pi/180.
-plt.axes(projection = 'polar')
-plt.polar(rads, db,color='red')
-
-
-
-#fig = Figure()
-#ax = fig.add_subplot(111)
-#ax2 = ax.twinx()
-#fig, (ax1, ax2) = plt.subplots(1, 2, sharex=True, sharey=True)
-
-if 0:
-    # Polar axis for sky track plot
-    self.ax2 = self.fig2.add_subplot(111, projection='polar')
-    self.ax2.set_rmax(90)
-    self.ax2.set_yticks([0,30, 60, 90])          # Less radial ticks
-    self.ax2.set_yticklabels(['90','60','30','0'])
-    #self.ax2.set_rlabel_position(-22.5)  # Move radial labels away from plotted line
-    self.ax2.grid(True)
-    xtics = ['E','','N','','W','','S','']
-    self.ax2.set_xticklabels(xtics) 
-
-if 0:    
-    # db vs az
-    ax.plot(az, db,color='red')
-    ax.set_xlabel('Az (deg)')
-    ax.set_ylabel('db (dB)')
-    fig.suptitle('Antenna Pattern Measurements')
-    ax.grid(True)
-    
 plt.show()

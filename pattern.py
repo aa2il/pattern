@@ -2,7 +2,7 @@
 ################################################################################
 #
 # pattern.py - Rev 1.0
-# Copyright (C) 2021 by Joseph B. Attili, aa2il AT arrl DOT net
+# Copyright (C) 2021-2 by Joseph B. Attili, aa2il AT arrl DOT net
 #
 #    Program kto measure beam pattern.
 #
@@ -20,7 +20,7 @@
 #
 ################################################################################
 
-from __future__ import print_function
+#from __future__ import print_function
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QTimer
@@ -51,6 +51,10 @@ class PARAMS:
                       choices=['HAMLIB','NONE'])
         arg_proc.add_argument("-port2", help="Rotor onnection Port",
                               type=int,default=0)
+        arg_proc.add_argument("-step", help="Az angle Step",
+                              type=int,default=10)
+        arg_proc.add_argument("-tol", help="Az angle tolerance",
+                              type=float,default=5.)
         args = arg_proc.parse_args()
 
         self.RIG_CONNECTION   = args.rig[0]
@@ -68,13 +72,14 @@ class PARAMS:
         if self.ROTOR_CONNECTION=='HAMLIB' and self.PORT2==0:
             self.PORT2        = 4533
 
+        self.STEP = args.step
+        self.TOL  = args.tol
+            
 ################################################################################
 
 # User params
-THRESH=5
 START=-180
 STOP=180
-STEP=10
 
 ################################################################################
 
@@ -119,6 +124,7 @@ if __name__ == '__main__':
     # Check where the rotor is & try to inimize initial ovement
     pos=P.sock2.get_position()
     az=pos[0]
+    STEP=P.STEP
     if az!=None:
         if az>180:
             az-=360
@@ -128,8 +134,13 @@ if __name__ == '__main__':
             STOP=tmp
             STEP=-STEP
 
-    print(az,START,STOP,STEP)
-    #sys.exit(0)
+    print('az=',az,'\tStart=',START,'\tStop=',STOP,'\tStep=',STEP,'\n')
+
+    if False:
+        # Take a sample
+        s = P.sock.read_meter('S')
+        print('S=',s)
+        sys.exit(0)
 
     # Loop over all angles
     for theta in range(START,STOP+STEP,STEP):
@@ -149,7 +160,7 @@ if __name__ == '__main__':
         # Set rotor position
         P.sock2.set_position([theta,0])
         
-        # Make sur rotor is stable & get its position
+        # Make sure rotor is stable & get its position
         for i in range(ntries):
             time.sleep(1)
             pos=P.sock2.get_position()
@@ -159,7 +170,7 @@ if __name__ == '__main__':
             el=pos[1]
             print(i,'\ttheta=',theta,'\tpos=',pos)
 
-            if az==None or (abs(az-theta)<THRESH and abs(el-0)<THRESH):
+            if az==None or (abs(az-theta)<P.TOL and abs(el-0)<P.TOL):
                 break
         
         # Read S-meter
