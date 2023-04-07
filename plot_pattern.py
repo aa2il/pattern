@@ -21,7 +21,8 @@ import matplotlib.pyplot as plt
 ###############################################################################
 
 RMIN=-30
-DIR_NAME = '~/.wine/drive_c/4nec2/out'
+#DIR_NAME = '~/.wine/drive_c/4nec2/out'
+DIR_NAME = './'
 
 ###############################################################################
 
@@ -145,7 +146,7 @@ if args.nec:
     fname_nec = os.path.expanduser(DIR_NAME+'/'+args.nec)
     theta2,gain2=read_nec(fname_nec)
 else:
-    gain2=None
+    gain2=[]
 
 fname=args.fname
 print('fname=',fname)
