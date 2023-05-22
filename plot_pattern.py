@@ -71,7 +71,7 @@ def get_values(x,key,typ=None):
 # Function to read the NEC output file
 def read_nec(fname):
     
-    print('fname=',fname)
+    print('READ NEC" fname=',fname)
     first_time=True
     with open(fname) as fp:
         while True:
@@ -197,15 +197,20 @@ print('az0=',az0)
 fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
 
 theta=(az-az0)*np.pi/180.
-ax.plot(theta, db,color='red')
+ax.plot(theta, db,color='red',label='Measured')
 if len(gain2)>0:
-    ax.plot(theta2, gain2,color='green')
+    ax.plot(theta2, gain2,color='green',label='NEC Model')
+ax.grid(True)
+ax.set_title(fname)
+ax.legend(loc='lower left')
 
 fig, ax = plt.subplots()
-ax.plot(az,db,color='red')
-ax.plot(x,y,color='blue')
+ax.plot(az,db,color='red',label='Measured')
+ax.plot(x,y,color='blue',label='Fit')
 #if len(gain2)>0:
-#    ax.plot(theta2*180./np.pi, gain2,color='green')
+#    ax.plot(theta2*180./np.pi, gain2,color='green',label='NEC Model')
 ax.grid(True)
-
+ax.set_title(fname)
+#ax.legend(loc='lower left')
+   
 plt.show()
