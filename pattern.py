@@ -64,7 +64,7 @@ class PARAMS:
             self.RIG       = None
             
         self.PORT             = args.port
-        if self.PORT==0 and self.RIG_CONNECTION=="FLRIG" and self.RIG=="IC9700":
+        if self.PORT==0 and self.RIG_CONNECTION=="FLRIG" and self.RIG in ['IC9700','IC7300']:
             self.PORT=12346
         
         self.ROTOR_CONNECTION = args.rotor
