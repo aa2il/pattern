@@ -2,7 +2,7 @@
 ################################################################################
 #
 # pattern.py - Rev 1.0
-# Copyright (C) 2021-2 by Joseph B. Attili, aa2il AT arrl DOT net
+# Copyright (C) 2021-4 by Joseph B. Attili, aa2il AT arrl DOT net
 #
 #    Program kto measure beam pattern.
 #
@@ -26,8 +26,8 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QTimer
 import argparse
 from pprint import pprint
-import rig_io.socket_io as socket_io
-from rig_io.ft_tables import CONNECTIONS,RIGS
+from rig_io import socket_io
+from rig_io import CONNECTIONS,RIGS
 import functools
 import time
 import datetime;
