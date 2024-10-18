@@ -4,7 +4,7 @@
 # pattern.py - Rev 1.0
 # Copyright (C) 2021-4 by Joseph B. Attili, aa2il AT arrl DOT net
 #
-#    Program kto measure beam pattern.
+#    Program to measure beam pattern.
 #
 ################################################################################
 #
@@ -20,10 +20,16 @@
 #
 ################################################################################
 
-#from __future__ import print_function
 import sys
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QTimer
+try:
+    if True:
+        from PyQt6.QtWidgets import *
+    else:
+        from PySide6.QtWidgets import *
+except ImportError:
+    # use Qt5
+    from PyQt5.QtWidgets import *
+    #from PyQt5.QtCore import QTimer
 import argparse
 from pprint import pprint
 from rig_io import socket_io
