@@ -1,0 +1,18 @@
+###############################################################################
+#
+# Under uv - see uvinit script in this directory:
+#
+#     rm -r .venv/ pyproject.toml .python-version uv.lock
+#     uv init  --python 3.12
+#     uv add -r requirements.txt
+#
+###############################################################################
+
+numpy
+scipy
+pyserial
+psutil
+pytz
+matplotlib
+pandas
+

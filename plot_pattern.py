@@ -1,8 +1,9 @@
-#! /usr/bin/python3 -u
+#!/usr/bin/env -S uv run --script
+
+#OLD:  ! /usr/bin/python3 -u
 ###############################################################################
 #
 # Script to plot antenna pattern meaurements
-#
 # 
 #    plot_pattern.py PATTERN_2m_6x6_OWA_Yagi.DAT -nec owa_yagi_6el_circ.out
 #

@@ -1,8 +1,10 @@
-#! /usr/bin/python3 -u
+#!/usr/bin/env -S uv run --script
+
+#OLD:  ! /usr/bin/python3 -u
 ################################################################################
 #
-# pattern.py - Rev 1.0
-# Copyright (C) 2021-5 by Joseph B. Attili, joe DOT aa2il AT gmail DOT com
+# pattern.py - Rev 1.1
+# Copyright (C) 2021-6 by Joseph B. Attili, joe DOT aa2il AT gmail DOT com
 #
 #    Program to measure beam pattern.
 #
@@ -21,15 +23,6 @@
 ################################################################################
 
 import sys
-try:
-    if True:
-        from PyQt6.QtWidgets import *
-    else:
-        from PySide6.QtWidgets import *
-except ImportError:
-    # use Qt5
-    from PyQt5.QtWidgets import *
-    #from PyQt5.QtCore import QTimer
 import argparse
 from pprint import pprint
 from rig_io import socket_io
@@ -57,7 +50,11 @@ class PARAMS:
                       choices=['HAMLIB','NONE'])
         arg_proc.add_argument("-port2", help="Rotor onnection Port",
                               type=int,default=0)
-        arg_proc.add_argument("-step", help="Az angle Step",
+        arg_proc.add_argument("-start", help="Az Start Angle",
+                              type=int,default=-180)
+        arg_proc.add_argument("-stop", help="Az Stop Angle",
+                              type=int,default=180)
+        arg_proc.add_argument("-step", help="Az Angle Step",
                               type=int,default=10)
         arg_proc.add_argument("-tol", help="Az angle tolerance",
                               type=float,default=5.)
@@ -78,15 +75,15 @@ class PARAMS:
         if self.ROTOR_CONNECTION=='HAMLIB' and self.PORT2==0:
             self.PORT2        = 4533
 
-        self.STEP = args.step
-        self.TOL  = args.tol
+        if self.ROTOR_CONNECTION == 'NONE':
+            self.START = 0
+            self.STOP  = 0
+        else:
+            self.START = args.start
+            self.STOP  = args.stop
+        self.STEP  = args.step
+        self.TOL   = args.tol
             
-################################################################################
-
-# User params
-START=-180
-STOP=180
-
 ################################################################################
 
 if __name__ == '__main__':
@@ -131,6 +128,8 @@ if __name__ == '__main__':
     pos=P.sock2.get_position()
     az=pos[0]
     STEP=P.STEP
+    START=P.START
+    STOP=P.STOP
     if az!=None:
         if az>180:
             az-=360
@@ -154,7 +153,7 @@ if __name__ == '__main__':
 
         # Set the number of tries for this step
         if theta==START:
-            ntries=60              # It can take 1 minute to come completely round
+            ntries=60              # It can take 1 minute to come completely around
         else:
             ntries=10              # Should take only a couple of seconds afer that
         
@@ -203,7 +202,7 @@ if __name__ == '__main__':
         else:
             plus=0
             S=db/6
-        print('theta=',theta,'\tS=',s,db,S)
+        print('theta=',theta,'\tS=',s,' raw =\t',db,'dB =\t',S,' S-units')
 
         # Save measurement
         if az==None:
