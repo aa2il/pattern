@@ -190,19 +190,14 @@ if __name__ == '__main__':
         s/=N
 
         # Convert to dB
-        if P.RIG_CONNECTION=='DIRECT':
-            #db=float(s)*114./255.-54.
-            db=float(s)*100./256
-        elif P.RIG_CONNECTION=='FLRIG':
-            db=s
-            
-        if db>54:
-            plus=db-54
+        S=s
+        db=S*6. - 54
+        if S>9:
             S=9
+            plus=(S-9)*6.
         else:
             plus=0
-            S=db/6
-        print('theta=',theta,'\tS=',s,' raw =\t',db,'dB =\t',S,' S-units')
+        print('theta=',theta,'\tS=',s,' raw =\t',db,'dB =\t',S,'+',plus,' S-units')
 
         # Save measurement
         if az==None:

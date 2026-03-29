@@ -10,6 +10,12 @@
 #set ROOT="/media/${USER}/pi"
 #set ROOT="/media/${USER}/aa2il"
 set ROOT="/media/${USER}/marconi"
+#set ROOT="/media/${USER}/calvin"
+#set ROOT="/media/${USER}/sproul-win"
+set ROOT="/mnt/sproul"
+set ROOT="/mnt/calvin"
+#set ROOT="/mnt/Luther"
+#set ROOT="/mnt/marconi"
 #set ROOT="/media/${USER}/3D76-ECB1/"
 #set ROOT="/media/${USER}/acer"
 if( !(-e $ROOT) )then
@@ -30,7 +36,7 @@ echo OLD=$old
 #set OLD="work2"
 
 rm -f DIFFS
-foreach i (*.py DIFF)
+foreach i (*.py DIFF *.txt)
     echo $i
     set n=`diff -w $old/$i $i | wc -l`
     if( $n>0 ) then
