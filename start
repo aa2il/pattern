@@ -1,19 +1,29 @@
 #! /bin/tcsh
 
+#set verbose
+set echo
+
 set RIG="FTd3000"
 set RIG="IC9700"
 
-#set CONNECTION="DIRECT"
-set CONNECTION="FLRIG"
+set CONNECTION="DIRECT"
+#set CONNECTION="FLRIG"
 
-set STEP=5
-set TOL=2.5
-
+set START=-175
+set STOP = 175
+set STEP = 5
+set TOL  = 2.5
 
 pkill flrig
+pkill rigctld
 pkill rotctld
-start_flrig $RIG
-/home/pi/hamlib-4.3.1/tests/rotctld -vvv -m 603 -r /dev/ttyACM0 -s 9600 &
+
+if( $CONNECTION == "FLRIG" )then
+    start_flrig $RIG
+endif    
+
+#/home/pi/hamlib-4.3.1/tests/rotctld -vvv -m 603 -r /dev/ttyACM0 -s 9600 &
+start_hamlib GS232
 
 #pattern.py -rig DIRECT FTdx3000 -rotor NONE
 
@@ -22,4 +32,5 @@ start_flrig $RIG
 
 #start_flrig $RIG
 #rotor
-pattern.py -rig $CONNECTION $RIG -rotor HAMLIB -port2 4533 -step $STEP -tol $TOL
+
+pattern.py -rig $CONNECTION $RIG -rotor HAMLIB -port2 4533 -start $START -stop $STOP -step $STEP -tol $TOL

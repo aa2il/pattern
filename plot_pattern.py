@@ -30,9 +30,12 @@ DIR_NAME = './'
 # Get file name from command line
 arg_proc = argparse.ArgumentParser()
 arg_proc.add_argument("fname", help="CSV file with measurements",
-                      type=str,default=None)   #,nargs='*')    # '+'
+                      type=str,default='PATTERN.DAT',nargs='*')    # '+'
+#                      type=str,default=None)   #,nargs='*')    # '+'
 arg_proc.add_argument("-nec", help="4Nec2 Output File",
                       type=str,default=None)
+arg_proc.add_argument('-peak', action='store_true',
+                      help='Center Plot around Peak')
 args = arg_proc.parse_args()
 
 ################################################################################
@@ -141,7 +144,7 @@ def read_nec(fname):
 ###############################################################################
 
 print("\n\n***********************************************************************************")
-print("\nPlot Pattern  ...")
+print("\nPlot Antenna Pattern  ...")
 
 if args.nec:
     fname_nec = os.path.expanduser(DIR_NAME+'/'+args.nec)
@@ -150,6 +153,8 @@ else:
     gain2=[]
 
 fname=args.fname
+if type(fname) == list:   
+    fname=fname[0]
 print('fname=',fname)
 #sys.exit(0)
 
@@ -175,23 +180,28 @@ print('az=',az[0:3])
 db = get_values(data,'db',float)
 print('db=',db[0:3])
 db=db-max(db)
-print(db)
+print('\t',db)
 
 for i in range(len(db)):
     db[i]=max(db[i],RMIN)
 
 # Fit a parabola to peak to determine where max is and how much we need to rotate plot by
-n2=6
-idx=np.argmax(db)
-print('idx=',idx)
-idx2=range( (idx-n2),(idx+n2) )
-print('idx2=',idx2)
-x=az[idx2]
-p=np.polyfit(x,db[idx2],2)
-print('p=',p)
-y=p[0]*x*x + p[1]*x + p[2]
-az0=-0.5*p[1]/p[0]
-print('az0=',az0)
+if args.peak:
+    n1=int( len(az)/2 )
+    print('\nFinding peak ... n1=',n1)
+    n2=min(6,n1)
+    idx=np.argmax(db)
+    print('idx=',idx)
+    idx2=range( (idx-n2),(idx+n2) )
+    print('idx2=',idx2)
+    x=az[idx2]
+    p=np.polyfit(x,db[idx2],2)
+    print('p=',p)
+    y=p[0]*x*x + p[1]*x + p[2]
+    az0=-0.5*p[1]/p[0]
+    print('az0=',az0)
+else:
+    az0=0
     
 ###############################################################################
 
@@ -207,7 +217,8 @@ ax.legend(loc='lower left')
 
 fig, ax = plt.subplots()
 ax.plot(az,db,color='red',label='Measured')
-ax.plot(x,y,color='blue',label='Fit')
+if args.peak:
+    ax.plot(x,y,color='blue',label='Fit')
 #if len(gain2)>0:
 #    ax.plot(theta2*180./np.pi, gain2,color='green',label='NEC Model')
 ax.grid(True)

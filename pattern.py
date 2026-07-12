@@ -103,6 +103,9 @@ if __name__ == '__main__':
         print('Opened socket to',P.sock.rig_type,P.sock.rig_type1,\
               P.sock.rig_type2)
 
+    frq = P.sock.get_freq()
+    print('frq=',frq)
+
     # Open connection to rotor
     print('\nOpening rotor...')
     P.sock2 = socket_io.open_rig_connection(P.ROTOR_CONNECTION,0,P.PORT2,0,'ROTOR')
@@ -118,9 +121,10 @@ if __name__ == '__main__':
     fp.write('# Azimuth Pattern Measurements\n')
     fp.write('# \n')
     fp.write('# \n')
-    fp.write('# Time Stamp: '+str( datetime.datetime.now())+'\n' )
-    fp.write('# Rig: '+P.sock.rig_type1+P.sock.rig_type2+'\n')
+    fp.write('# Time Stamp:     '+str( datetime.datetime.now())+'\n' )
+    fp.write('# Rig:            '+P.sock.rig_type1+P.sock.rig_type2+'\n')
     fp.write('# Rig Connection: '+P.RIG_CONNECTION+'\n')
+    fp.write('# Rig Frequency:  '+str(1e-6*frq)+'MHz\n')
     fp.write('# \n')
     fp.write('Theta\tAz\tEl\ts\tdb\tS\n')
     
@@ -197,7 +201,7 @@ if __name__ == '__main__':
             plus=(S-9)*6.
         else:
             plus=0
-        print('theta=',theta,'\tS=',s,' raw =\t',db,'dB =\t',S,'+',plus,' S-units')
+        print('theta=',theta,'\tS=',s,' raw =\t',db,'dB =\t',S,'+',plus,' S-units\n')
 
         # Save measurement
         if az==None:
